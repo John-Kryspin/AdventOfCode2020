@@ -1,5 +1,5 @@
-const { readFileByLineSpace } = require("../helper")
-const array = readFileByLineSpace("input", "06")
+const { readFileByLine } = require("../helper")
+const array = readFileByLine("input", "06")
 
 let currentgroup = []
 

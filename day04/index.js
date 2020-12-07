@@ -1,5 +1,5 @@
-const { readFileByLineSpace } = require("../helper")
-const array = readFileByLineSpace("input", "04")
+const { readFileByLine } = require("../helper")
+const array = readFileByLine("input", "04")
 
 let currentPassport = {}
 let validPassports = 0
