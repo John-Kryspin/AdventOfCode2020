@@ -8,36 +8,24 @@ function calculateCount(map, check, MATCH) {
     let modified = true
     while (modified) {
         modified = false
-        let newMap = new Map()
+        let newMap = new Map(map)
         for (let y = 0; y < array.length; y++) {
             for (let x = 0; x < array[y].length; x++) {
                 const coord = `${x},${y}`
-                if (map.get(coord) === ".") {
-                    newMap.set(coord, ".")
-                    continue;
-                }
                 const count = check(x, y, map)
                 if (map.get(coord) === "L") {
                     if (count === 0) {
                         newMap.set(coord, "#")
                         modified = true
-                    } else {
-                        newMap.set(coord, "L")
-
-                    }
-
+                    } 
                 } else if (map.get(coord) === "#") {
                     if (count >= MATCH) {
                         newMap.set(coord, "L")
                         modified = true
-                    } else {
-                        newMap.set(coord, "#")
-
-                    }
+                    } 
                 }
             }
         }
-
         map = newMap
     }
     const ans = [...map.values()].reduce((acc, curr) => {
