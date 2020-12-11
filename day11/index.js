@@ -59,12 +59,12 @@ while (true) {
 
     map = newMap
 }
-let count = 0
-map.forEach((seat) => {
-    if (seat === "#")
-        count++
-})
-console.log(count)
+const ans = [...map.values()].reduce((acc,curr)=>{
+    if(curr === "#")
+        return acc+=1
+    return acc
+},0)
+console.log({ans})
 console.timeEnd()
 // console.log(map)
 function countAdjacentOccupied(x, y, map) {
