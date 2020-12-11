@@ -55,15 +55,13 @@ function countAdjacentOccupied(x, y, map) {
     let count = 0
     for (let i = -1; i < 2; i++) {
         isOccupied(x + i, y - 1, map) && count++
-    }
-    for (let i = -1; i < 2; i++) {
-        if (i == 0)
-            continue
-        isOccupied(x + i, y, map) && count++
-    }
-    for (let i = -1; i < 2; i++) {
+        //skip the cell you are already on
+        if (i !== 0)
+            isOccupied(x + i, y, map) && count++
+
         isOccupied(x + i, y + 1, map) && count++
     }
+
     return count
 }
 function countSeenOccupied(x, y, map) {
@@ -83,9 +81,7 @@ function countRay(startX, startY, map, offX, offY) {
     // console.log({startX,startY,offX,offY})
     for (let x = startX + offX, y = startY + offY; x >= 0 && x < ROW_LENGTH && y >= 0 && y < array.length; x += offX, y += offY) {
         if (isEmptyChair(x, y, map)) return false
-        if (isOccupied(x, y, map)) {
-            return true
-        }
+        if (isOccupied(x, y, map)) return true
     }
     return false
 }
