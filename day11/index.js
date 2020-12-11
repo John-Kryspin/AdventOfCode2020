@@ -1,71 +1,55 @@
 const { readFileByLine } = require("../helper")
 let array = readFileByLine("input", "11")
-// console.log(array)
 const ROW_LENGTH = array[0].length
-let map = new Map()
-
-let y = 0
-for (const row of array) {
-    let x = 0
-    for (const seat of row) {
-        map.set(`${x},${y}`, seat)
-        x++
-    }
-    y++
-}
-
-console.time()
-while (true) {
-    y = 0
-    let newMap = new Map()
-    let modified = false
-    for (const row of array) {
-        let x = 0
-        for (const seat of row) {
-            //seat is empty
-            if (map.get(`${x},${y}`) === ".") {
-                newMap.set(`${x},${y}`, ".")
-                x++
-                continue;
-            }
-            const count = countSeenOccupied(x, y, map)
 
 
-            if (map.get(`${x},${y}`) === "L") {
-                if (count === 0) {
-                    newMap.set(`${x},${y}`, "#")
-                    modified = true
-                } else {
-                    newMap.set(`${x},${y}`, "L")
 
+function calculateCount(map, check, MATCH) {
+    let modified = true
+    while (modified) {
+        modified = false
+        let newMap = new Map()
+        for (let y = 0; y < array.length; y++) {
+            for (let x = 0; x < array[y].length; x++) {
+                const coord = `${x},${y}`
+                if (map.get(coord) === ".") {
+                    newMap.set(coord, ".")
+                    continue;
                 }
+                const count = check(x, y, map)
+                if (map.get(coord) === "L") {
+                    if (count === 0) {
+                        newMap.set(coord, "#")
+                        modified = true
+                    } else {
+                        newMap.set(coord, "L")
 
-            } else if (map.get(`${x},${y}`) === "#") {
-                if (count >= 5) {
-                    newMap.set(`${x},${y}`, "L")
-                    modified = true
-                } else {
-                    newMap.set(`${x},${y}`, "#")
+                    }
 
+                } else if (map.get(coord) === "#") {
+                    if (count >= MATCH) {
+                        newMap.set(coord, "L")
+                        modified = true
+                    } else {
+                        newMap.set(coord, "#")
+
+                    }
                 }
             }
-            x++
         }
-        y++
-    }
-    // console.log({newMap, modified})
-    if (!modified)
-        break
 
-    map = newMap
+        map = newMap
+    }
+    const ans = [...map.values()].reduce((acc, curr) => {
+        if (curr === "#")
+            return acc += 1
+        return acc
+    }, 0)
+    return ans
 }
-const ans = [...map.values()].reduce((acc,curr)=>{
-    if(curr === "#")
-        return acc+=1
-    return acc
-},0)
-console.log({ans})
-console.timeEnd()
+
+
+
 // console.log(map)
 function countAdjacentOccupied(x, y, map) {
     let count = 0
@@ -84,26 +68,15 @@ function countAdjacentOccupied(x, y, map) {
 }
 function countSeenOccupied(x, y, map) {
     let count = 0
-    //left
-    // console.log("left")
 
-    //left
-    countRay(x, y, map, -1, 0) && count++
-    //right
-    countRay(x, y, map, 1, 0) && count++
-    //up
-    countRay(x, y, map, 0, -1) && count++
-    //down
-    countRay(x, y, map, 0, 1) && count++
-    //upright
-    countRay(x, y, map, 1, -1) && count++
-    //downright
-    countRay(x, y, map, 1, 1) && count++
-    //downleft
-    countRay(x, y, map, -1, 1) && count++
-    //upleft
-    countRay(x, y, map, -1, -1) && count++
-
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            //skip 0,0, iterate through all directions
+            if (!(j === 0 && i === 0)) {
+                countRay(x, y, map, i, j) && count++
+            }
+        }
+    }
     return count
 }
 function countRay(startX, startY, map, offX, offY) {
@@ -115,7 +88,6 @@ function countRay(startX, startY, map, offX, offY) {
         }
     }
     return false
-
 }
 function isEmptyChair(x, y, map) {
     if (map.get(`${x},${y}`) === "L")
@@ -127,3 +99,18 @@ function isOccupied(x, y, map) {
         return true
     return false
 }
+let map = new Map()
+
+for (let y = 0; y < array.length; y++) {
+    for (let x = 0; x < array[y].length; x++) {
+        map.set(`${x},${y}`, array[y][x])
+    }
+}
+console.time()
+const part1Map = new Map(map)
+const part1 = calculateCount(part1Map, countAdjacentOccupied, 4)
+console.log({ part1 })
+const part2Map = new Map(map)
+const part2 = calculateCount(part2Map, countSeenOccupied, 5)
+console.log({ part2 })
+console.timeEnd()
