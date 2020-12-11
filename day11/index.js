@@ -14,6 +14,7 @@ for (const row of array) {
     y++
 }
 
+console.time()
 while (true) {
     y = 0
     let newMap = new Map()
@@ -22,7 +23,14 @@ while (true) {
         let x = 0
         for (const seat of row) {
             //seat is empty
+            if (map.get(`${x},${y}`) === ".") {
+                newMap.set(`${x},${y}`, ".")
+                x++
+                continue;
+            }
             const count = countSeenOccupied(x, y, map)
+
+
             if (map.get(`${x},${y}`) === "L") {
                 if (count === 0) {
                     newMap.set(`${x},${y}`, "#")
@@ -40,9 +48,6 @@ while (true) {
                     newMap.set(`${x},${y}`, "#")
 
                 }
-
-            } else {
-                newMap.set(`${x},${y}`, ".")
             }
             x++
         }
@@ -60,6 +65,7 @@ map.forEach((seat) => {
         count++
 })
 console.log(count)
+console.timeEnd()
 // console.log(map)
 function countAdjacentOccupied(x, y, map) {
     let count = 0
