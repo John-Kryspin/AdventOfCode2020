@@ -1,12 +1,12 @@
 const { readFileByLine } = require("../helper")
 let array = readFileByLine("input", "10", Number)
 array.push(0)
-array.push(Math.max(...array)+3)
-array = array.sort((a,b)=>a-b)
+array.push(Math.max(...array) + 3)
+array = array.sort((a, b) => a - b)
 
 let diffs = { 1: 0, 3: 0 }
-for (let i = 0; i < array.length-1; i++) {
-    const diff = array[i+1] - array[i]
+for (let i = 0; i < array.length - 1; i++) {
+    const diff = array[i + 1] - array[i]
     diffs[diff] += 1
 }
 
@@ -30,4 +30,4 @@ function getWay(index) {
         return ways[index]
     }
 }
-console.log(ways[jolts[jolts.length-1]])
+console.log(ways[jolts[jolts.length - 1]])
