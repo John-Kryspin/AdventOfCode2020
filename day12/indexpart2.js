@@ -9,14 +9,7 @@ const dirmap = {
     "R": "RIGHT",
     "F": "FORWARD"
 }
-const digreesmap = {
-    0: "N",
-    90: "E",
-    180: "S",
-    270: "W",
-}
-let degrees = 90
-let facing = "E"
+
 let pos = { x: 0, y: 0 }
 let waypointPos = { x: 10, y: 1 }
 for (let line of array) {
@@ -24,30 +17,27 @@ for (let line of array) {
     const amt = Number(line.match(/\d+/g)[0])
     const action = dirmap[d]
     if (action === "LEFT") {
-        let newDigrees = amt
-        let calculatedWaypoint = { ...waypointPos }
-
-        while (newDigrees !== 0) {
-            newDigrees = newDigrees - 90
+        let wayPointCopy = { ...waypointPos }
+        const modifier = amt / 90
+        for (let i = 0; i < modifier; i++) {
             let tempWaypoint = {}
-            tempWaypoint.x = -(calculatedWaypoint.y - pos.y) + pos.x
-            tempWaypoint.y = (calculatedWaypoint.x - pos.x) + pos.y
-            calculatedWaypoint = tempWaypoint
+            tempWaypoint.x = -(wayPointCopy.y - pos.y) + pos.x
+            tempWaypoint.y = (wayPointCopy.x - pos.x) + pos.y
+            wayPointCopy = tempWaypoint
         }
-        waypointPos = calculatedWaypoint
+        waypointPos = wayPointCopy
 
     }
     else if (action === "RIGHT") {
-        let newDigrees = amt
-        let calculatedWaypoint = { ...waypointPos }
-        while (newDigrees !== 0) {
-            newDigrees = newDigrees - 90
+        let wayPointCopy = { ...waypointPos }
+        const modifier = amt / 90
+        for (let i = 0; i < modifier; i++) {
             let tempWaypoint = {}
-            tempWaypoint.x = (calculatedWaypoint.y - pos.y) + pos.x
-            tempWaypoint.y = -(calculatedWaypoint.x - pos.x) + pos.y
-            calculatedWaypoint = tempWaypoint
+            tempWaypoint.x = (wayPointCopy.y - pos.y) + pos.x
+            tempWaypoint.y = -(wayPointCopy.x - pos.x) + pos.y
+            wayPointCopy = tempWaypoint
         }
-        waypointPos = calculatedWaypoint
+        waypointPos = wayPointCopy
     }
     else if (action === "FORWARD") {
         moveShip(pos, waypointPos, amt)
@@ -55,9 +45,7 @@ for (let line of array) {
     } else {
         moveWayPoint(waypointPos, d, amt)
     }
-    console.log(pos)
 }
-//28290 too low
 const part2 = Math.abs(pos.x) + Math.abs(pos.y)
 console.log({ part2 })
 function moveWayPoint(waypointPos, direction, amt) {
